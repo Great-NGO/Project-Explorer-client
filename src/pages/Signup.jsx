@@ -1,25 +1,23 @@
 import React from "react";
 import Layout from "./shared/Layout";
-import { Form, Col, Button, Container, Alert } from "react-bootstrap";
+import { Form, Col, Button, Container, Row } from "react-bootstrap";
 import { Facebook, Google } from "react-bootstrap-icons";
 
 const Signup = () => {
   return (
     <Layout>
-      <h1> PROJECT EXPLORER SIGNUP!</h1>
       <Container fluid="md">
-        <main className="border rounded p-5 mt-5">
+        <main className="mx-auto mt-5 p-5 border" style={{width:"90%"}}>
           <Form method="post" action="signup" id="signupForm">
             <h1>Sign Up</h1>
-         
-            <Form.Row>
+
+            <Row>
               <Form.Group as={Col} controlId="formGridFirstName">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="First name"
                   name="firstName"
-
                 />
               </Form.Group>
 
@@ -28,22 +26,18 @@ const Signup = () => {
                 <Form.Control
                   type="text"
                   placeholder="Last name"
-                  
                   name="lastName"
-                  
                 />
               </Form.Group>
-            </Form.Row>
+            </Row>
 
-            <Form.Row>
+            <Row>
               <Form.Group as={Col} controlId="formGroupEmail">
                 <Form.Label>Email Address</Form.Label>
                 <Form.Control
                   type="email"
                   placeholder="Enter your email"
-                 
                   name="email"
-                 
                 />
               </Form.Group>
 
@@ -52,22 +46,16 @@ const Signup = () => {
                 <Form.Control
                   type="password"
                   placeholder="Password"
-                
                   name="password"
-                 
                 />
               </Form.Group>
-            </Form.Row>
+            </Row>
 
-            <Form.Row>
+            <Row>
               <Form.Group as={Col} controlId="formGridProgram">
                 <Form.Label>Program</Form.Label>
-                <Form.Control
-                  as="select"
-  
-                >
+                <Form.Control as="select">
                   <option>Choose...</option>
-             
                 </Form.Control>
               </Form.Group>
 
@@ -97,9 +85,9 @@ const Signup = () => {
                       ))} */}
                 </Form.Control>
               </Form.Group>
-            </Form.Row>
+            </Row>
 
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" className="mt-2">
               Submit
             </Button>
           </Form>
@@ -107,32 +95,18 @@ const Signup = () => {
           <div className="socialLogin mt-3">
             {/* <Form> */}
             <Button variant="primary" type="submit">
-              <span>
-                {" "}
-                <Facebook size={22} />{" "}
-              </span>{" "}
-              <a
-                href="/auth/facebook"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                {" "}
-                Signup with Facebook{" "}
+              <span> <Facebook size={22} /> </span>
+              <a href="/auth/facebook" style={{ color: "white", textDecoration: "none" }} >
+                Signup with Facebook
               </a>
             </Button>
             {/* </Form> */}
 
             <div className="mt-1">
               <Button variant="danger" type="submit">
-                <span>
-                  {" "}
-                  <Google size={22} />{" "}
-                </span>{" "}
-                <a
-                  href="/auth/google"
-                  style={{ color: "white", textDecoration: "none" }}
-                >
-                  {" "}
-                  Signup with Google{" "}
+                <span> <Google size={22} /> </span>
+                <a href="/auth/google" style={{ color: "white", textDecoration: "none" }} >
+                  Signup with Google
                 </a>
               </Button>
             </div>

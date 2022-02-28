@@ -3,6 +3,7 @@ import React from "react";
 const Footer = () => {
   return (
     <>
+      {/* <footer className="container w-75"> */}
       <footer className="container">
         <div className="footerDiv">
           <p className="text-muted">

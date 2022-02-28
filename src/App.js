@@ -11,6 +11,8 @@ import Project from './pages/Project'
 
 import {BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
 import E404 from './pages/E404';
+import ForgotPassword from './pages/ForgotPassword';
+
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
         <Route path="/login" element={ <Login />} />
         <Route path="/projects/submit" element={ <CreateProject />} />
         <Route path="/projects/:id" element={ <Project />} />
+        <Route path="/forgotPassword" element={ <ForgotPassword />} />
         
         
         <Route path="*" element={ <E404 />} />
