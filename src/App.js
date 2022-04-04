@@ -12,7 +12,9 @@ import Project from './pages/Project'
 import {BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
 import E404 from './pages/E404';
 import ForgotPassword from './pages/ForgotPassword';
-
+import EditProject from './pages/EditProject';
+import ProtectedRoute from './services/ProtectedRoute';
+import EditProfile from './pages/EditProfile';
 
 function App() {
   return (
@@ -23,8 +25,10 @@ function App() {
         <Route path="/login" element={ <Login />} />
         <Route path="/projects/submit" element={ <CreateProject />} />
         <Route path="/projects/:id" element={ <Project />} />
+        <Route path="/editProject/:id" element={<EditProject />} />
         <Route path="/forgotPassword" element={ <ForgotPassword />} />
-        
+        {/* <Route path="/editProfile/:id" element={ getCurrentUser() ? <EditProfile /> : <Navigate to="/login" /> } /> */}
+        <Route path="/editProfile/:id" element={ <ProtectedRoute Component={EditProfile} />} />
         
         <Route path="*" element={ <E404 />} />
      </Routes>

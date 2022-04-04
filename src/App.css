@@ -13,6 +13,11 @@
   /* display: grid; */
 }
 
+.showcase .projectLinks{
+  text-decoration: none;
+  cursor: default;
+}
+
 @media screen and (max-width:700px) {
   .showcase {
       margin: 20px auto;
@@ -201,31 +206,19 @@
 
 /* view Project Page */
 
-.vpEpRow1 {
-  background-color: lightgray;
-  margin: 0px auto 14px 14px;
-  padding: 5px 0px 5px 10px;
-}
-
 #project_abstract {
   padding-right: 10px;
-  padding-left: 32px;
 }
 
 #project_name {
-  margin-left: 15px;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 #project_authors p {
   padding: "0px 5px";
 }
 
-#vpCardBlock {
-  text-align: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
+
 
 @media screen and (max-width:767px) {
   #editBtn {
@@ -240,4 +233,8 @@
   .loginBtn{
     margin-top: 8px;
   }
+  .headerNav{
+    display: grid;
+  }
 } 
+

@@ -8,7 +8,7 @@ const Layout = (props) => {
         <>
             <Header/>
                 <main className="mx-auto">
-                    {props.children};
+                    {props.children}
                 </main>
             <Footer/>
         </>

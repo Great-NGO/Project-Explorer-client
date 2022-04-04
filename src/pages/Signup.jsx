@@ -1,15 +1,158 @@
-import React from "react";
+import React,{ useState, useReducer, useEffect} from "react";
 import Layout from "./shared/Layout";
-import { Form, Col, Button, Container, Row } from "react-bootstrap";
+import { Form, Col, Button, Container, Row, Alert } from "react-bootstrap";
 import { Facebook, Google } from "react-bootstrap-icons";
+// import axios from 'axios';
+
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+
+  //Initialize useNavigate
+  let navigate = useNavigate()
+
+  //State for Programs and Graduation Years API
+  const [programData, setProgramData ] = useState([]);
+  const [gradYearData, setGradYearData] = useState([])
+
+  //State for selected program and Graduation Year
+  const [program, setProgram] = useState();
+  const [graduationYear, setGraduationYear] = useState();
+
+
+  useEffect(() => {
+    
+    fetch('/api/programs')
+      .then(async (response) => {
+        const data = await response.json()
+        console.log("The Data for programs", data);
+        setProgramData(data);
+      })
+
+    fetch('/api/graduationYears')
+      .then(async (response) => {
+        const data = await response.json();
+        console.log(`Graduation Years - ${data}`);
+        setGradYearData(data);
+
+      })
+   
+  }, [])
+
+
+  //Reducer for signup
+
+  const initialState = {
+    isLoading: false,
+    error: [],
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    matricNumber: '',
+    loginLinkOpen: false
+  }
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'field': {
+        return {
+          ...state,
+          error: [],    //To clear the error array each time a user edits an input
+          [action.fieldName] : action.payload,
+        };      
+      }
+      case 'success': {
+        return {
+          ...state,
+          isLoading: false,
+          loginLinkOpen: true,
+          error: []
+        };
+      }
+      case 'clearErrorAlert': { //To clear the Error Alert each time a user clicks on it
+        return {
+          ...state,
+          error: []
+        }
+      }
+      case 'error' : {
+        return {
+          ...state,
+          error: action.payload
+        }
+      }
+      default:
+        return state;
+    }
+  }
+
+  
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const {firstname, lastname, email, password, matricNumber } = state;
+
+  //On Submit event handler
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
+    fetch('/api/signup',  {
+      method: "POST",
+      body: JSON.stringify({ firstname, lastname, email, password, program, matricNumber, graduationYear }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then((res) => {
+        console.log(res);
+        return res.json()
+      })
+      .then((data) => {
+        console.log("ThE POST DATA", data)
+        if(data.status === "Signup OK") {
+          console.log("Signup Successful");
+          dispatch({ type: 'success'})
+        }
+        else {
+          console.log(data.errors)
+          dispatch({ type: 'error', payload: data.errors})
+          console.log("The errors", state.error)
+        }
+      })
+
+  }
+  
   return (
     <Layout>
       <Container fluid="md">
         <main className="mx-auto mt-5 p-5 border" style={{width:"90%"}}>
-          <Form method="post" action="signup" id="signupForm">
+          <Form onSubmit={handleSubmit}>
+
+
+            {state.loginLinkOpen? 
+              <Alert variant="info">
+                <strong>New account has been successfully created. Please <span onClick={() => navigate('/login')} style={{cursor: "pointer", textDecoration: "underline"}}>Login!</span> </strong>  
+              </Alert>
+              : ''  
+            }
+
             <h1>Sign Up</h1>
+          
+            {/* To show all the errors as an array map */}
+            {/*           
+              {state.error && state.error.map((text) => (
+                <Alert variant="danger">
+                  <small>{text} </small>
+                </Alert>
+              ))} */}
+                   
+            {/* To only show the first error from the error array for better user experience*/}
+            {state.error.length > 0 ? 
+                <Alert variant="danger" onClick={(evt) => dispatch({type: 'clearErrorAlert'})} style={{cursor: "pointer", fontWeight: "700"}}>
+                  {state.error[0]}
+               </Alert>
+               : null
+            }
+                 
 
             <Row>
               <Form.Group as={Col} controlId="formGridFirstName">
@@ -17,7 +160,10 @@ const Signup = () => {
                 <Form.Control
                   type="text"
                   placeholder="First name"
-                  name="firstName"
+                  name="firstname"
+                  value={firstname}
+                  onChange={(evt) => dispatch({ type: 'field', fieldName: 'firstname', payload: evt.currentTarget.value}) }
+
                 />
               </Form.Group>
 
@@ -26,7 +172,10 @@ const Signup = () => {
                 <Form.Control
                   type="text"
                   placeholder="Last name"
-                  name="lastName"
+                  name="lastname"
+                  value={lastname}
+                  onChange={(evt) => dispatch({ type: 'field', fieldName: 'lastname', payload: evt.currentTarget.value}) }
+
                 />
               </Form.Group>
             </Row>
@@ -38,6 +187,9 @@ const Signup = () => {
                   type="email"
                   placeholder="Enter your email"
                   name="email"
+                  value={email}
+                  onChange={(evt) => dispatch({ type: 'field', fieldName: 'email', payload: evt.currentTarget.value}) }
+
                 />
               </Form.Group>
 
@@ -47,6 +199,9 @@ const Signup = () => {
                   type="password"
                   placeholder="Password"
                   name="password"
+                  value={password}
+                  onChange={(evt) => dispatch({ type: 'field', fieldName: 'password', payload: evt.currentTarget.value}) }
+
                 />
               </Form.Group>
             </Row>
@@ -54,8 +209,16 @@ const Signup = () => {
             <Row>
               <Form.Group as={Col} controlId="formGridProgram">
                 <Form.Label>Program</Form.Label>
-                <Form.Control as="select">
+                <Form.Control as="select"
+                  name="program"
+                  value={program}
+                  onChange={(evt) => setProgram(evt.target.value) }
+                
+                >
                   <option>Choose...</option>
+                  {programData && programData.map((progData) => (
+                    <option key={progData}> {progData} </option>
+                  ))}
                 </Form.Control>
               </Form.Group>
 
@@ -63,9 +226,10 @@ const Signup = () => {
                 <Form.Label>Matriculation Number</Form.Label>
                 <Form.Control
                   placeholder="e.g 16/2020"
-                  // value={matricNumber}
+                  value={matricNumber}
                   name="matricNumber"
-                  // onChange={handleInputChange}
+                  onChange={(evt) => dispatch({ type: 'field', fieldName: 'matricNumber', payload: evt.currentTarget.value}) }
+
                 />
               </Form.Group>
 
@@ -74,15 +238,15 @@ const Signup = () => {
                 <Form.Control
                   as="select"
                   // defaultValue="Choose..."
-                  // value={graduationYear}
+                  value={graduationYear}
                   name="graduationYear"
-                  // onChange={handleInputChange}
+                  onChange={(evt) => setGraduationYear(evt.target.value) }
                 >
                   <option>Choose...</option>
-                  {/* {gradYears &&
-                      gradYears.map((gradYData) => (
+                  {gradYearData &&
+                      gradYearData.map((gradYData) => (
                         <option key={gradYData}>{gradYData}</option>
-                      ))} */}
+                      ))}
                 </Form.Control>
               </Form.Group>
             </Row>

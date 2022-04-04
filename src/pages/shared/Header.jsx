@@ -1,16 +1,51 @@
 import React, { useState, useEffect } from "react";
-import {
-  Nav,
-  Navbar,
-  Container,
-  Form,
-  FormControl,
-  Button,
-  Col,
-} from "react-bootstrap";
-import { BellFill } from "react-bootstrap-icons";
+import { Nav, Navbar, Container, Form, FormControl, Button, } from "react-bootstrap";
+import AuthService from '../../services/auth';
+// import { BellFill } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+
+  const { getCurrentUser, logout } = AuthService;
+  const [usernameText, setUsernameText] = useState('')
+  const [profilePicture, setProfilePicture] = useState('')
+  const [userId, setUserId ] = useState('');
+
+  let navigate = useNavigate()
+
+  const clickLogout = () => {
+    logout()
+    navigate('/login')  //To redirect the user back to the login page once they logout
+    // navigate('/')
+  }
+
+  const usernameStyle = {
+    display: "inline-block",
+    color: "white",
+    paddingTop: "8px",
+    marginRight: "6px"
+  };
+
+  const profPicStyle = {
+    borderRadius: "50%", 
+    width: "35px", 
+    height: "35px", 
+    marginTop: "-2px", 
+    paddingLeft: "5px"
+  }
+
+
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    console.log('The user is ', user)
+    if(user){
+      setUsernameText(`Hi, ${user.firstname}`);
+      setProfilePicture(user.profilePicture);
+      setUserId(user._id)
+    }
+  }, [])
+  
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -30,11 +65,28 @@ const Header = () => {
             <Nav.Link href="/projects">Projects</Nav.Link>
             <Nav.Link href="/projects/submit">Submit</Nav.Link>
           </Nav>
+          
           <Nav>
-            <Nav.Link href="/signup">Signup</Nav.Link>
-            <Nav.Link eventKey={2} href="/login">
-              Login
-            </Nav.Link>
+          { getCurrentUser() !== null? (
+            <>
+              <span style={usernameStyle}>
+                <a href={`/editProfile/${userId}`} style={{textDecoration: 'none', color: '#B5B5B5'}}> 
+                  {usernameText} 
+                  <img src={profilePicture} alt="Profile" className="card-img-top" style={profPicStyle} />
+                </a>
+              </span>
+              <Nav.Link onClick={clickLogout} style={{marginRight: '10px'}}>
+                Logout
+              </Nav.Link>
+            </>
+            ) :      
+            <>
+              <Nav.Link href="/signup">Signup</Nav.Link>
+              <Nav.Link eventKey={2} href="/login">
+                Login
+              </Nav.Link>
+            </>
+          }
           </Nav>
         </Navbar.Collapse>
       </Container>
