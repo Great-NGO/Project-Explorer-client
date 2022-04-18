@@ -128,7 +128,7 @@ const sortDescending = (evt) => {
             <Navbar collapseOnSelect expand="md" style={{backgroundColor: "lightgray"}}>
               <Container>
               <Navbar.Brand>
-                <img src={profilePicture} alt="" className="defaultProfilePic" style={{ borderRadius: '50%', width: '65px', height: '65px', }} />
+                <img src={profilePicture.includes('http')? profilePicture : `/${profilePicture}` } alt="" className="defaultProfilePic" style={{ borderRadius: '50%', width: '65px', height: '65px', }} />
               </Navbar.Brand>
 
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />

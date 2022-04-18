@@ -1,47 +1,28 @@
-import React,{ useState, useReducer, useEffect} from "react";
+import React,{ useState, useReducer} from "react";
+import useFetch from "../services/useFetch";
 import Layout from "./shared/Layout";
 import { Form, Col, Button, Container, Row, Alert } from "react-bootstrap";
 import { Facebook, Google } from "react-bootstrap-icons";
 // import axios from 'axios';
-
 import { useNavigate } from 'react-router-dom';
+
 
 const Signup = () => {
 
   //Initialize useNavigate
   let navigate = useNavigate()
 
-  //State for Programs and Graduation Years API
-  const [programData, setProgramData ] = useState([]);
-  const [gradYearData, setGradYearData] = useState([])
-
+  //We use custom hook - useFetch to populate data for programData and graduationYears
+  const programData = useFetch('/api/programs');
+  const gradYearData = useFetch('/api/graduationYears');
+  
+  console.log("Using custom useFetch Hook, Our ProgData and gradYearData - ", programData, gradYearData )
   //State for selected program and Graduation Year
   const [program, setProgram] = useState();
   const [graduationYear, setGraduationYear] = useState();
 
 
-  useEffect(() => {
-    
-    fetch('/api/programs')
-      .then(async (response) => {
-        const data = await response.json()
-        console.log("The Data for programs", data);
-        setProgramData(data);
-      })
-
-    fetch('/api/graduationYears')
-      .then(async (response) => {
-        const data = await response.json();
-        console.log(`Graduation Years - ${data}`);
-        setGradYearData(data);
-
-      })
-   
-  }, [])
-
-
   //Reducer for signup
-
   const initialState = {
     isLoading: false,
     error: [],
@@ -136,15 +117,7 @@ const Signup = () => {
             }
 
             <h1>Sign Up</h1>
-          
-            {/* To show all the errors as an array map */}
-            {/*           
-              {state.error && state.error.map((text) => (
-                <Alert variant="danger">
-                  <small>{text} </small>
-                </Alert>
-              ))} */}
-                   
+                             
             {/* To only show the first error from the error array for better user experience*/}
             {state.error.length > 0 ? 
                 <Alert variant="danger" onClick={(evt) => dispatch({type: 'clearErrorAlert'})} style={{cursor: "pointer", fontWeight: "700"}}>

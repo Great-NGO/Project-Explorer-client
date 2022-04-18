@@ -1,9 +1,13 @@
-import React, {useReducer} from "react";
+import React, {useContext, useReducer} from "react";
 import Layout from "./shared/Layout";
 import {Form, Button, Container, Alert} from "react-bootstrap";
 import { Facebook, Google } from "react-bootstrap-icons"; 
 
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from "../context/ReferenceDataContext";
+import AuthService from "../services/auth";
+
+const {setWithExpiry } = AuthService
 
 const Login = () => {
 
@@ -49,6 +53,10 @@ const Login = () => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const { email, password } = state;
+
+  //Use the useContext hook, get the setFirstname and setProfile picture from it
+  const {setFirstName } = useContext(UserContext).value1;
+  const { setProfilePicture } = useContext(UserContext).value2;
   
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -68,11 +76,19 @@ const Login = () => {
       console.log(data);
 
       if(data.status === "Login OK") {
-        console.log('LOGGED IN SUCCESSFULLY');
+        console.log('LOGGED IN SUCCESSFULLY'); 
+
+        //Set the global state of the users firstname and profile picture when they login
+        setFirstName(data.user.firstname);
+        setProfilePicture(data.user.profilePicture);
+
         //Set the user info in local storage
-        localStorage.setItem("user", JSON.stringify(data.user));
+        setWithExpiry("user", data.user)
+        // localStorage.setItem("user", JSON.stringify(data.user));
+
+
         // Redirect User to Home page
-        navigate('/',true)
+        navigate('/',true) 
       }
       else {
         console.log(data.error);

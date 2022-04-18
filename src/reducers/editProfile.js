@@ -11,27 +11,63 @@ export const reducer = (state, action ) => {
           program: action.data.program,
           graduationYear: action.data.graduationYear,
           profilePicture: action.data.profilePicture,
-          error: []
+          error: [],
+          error2: []
 
         }
       }
       case 'field' : {
           return {
               ...state,
-              error: [],  //To clear the error
+              error: [],  //To clear the profile details error
+              error2: [],  //To clear the password error
               [action.fieldName]: action.payload
           }
+      }
+      case 'profilePicture' : {   //Handling upload profile picture
+        return {
+          ...state,
+          [action.fieldName]:action.payload
+        }
       }
       case 'clearErrorAlert': {
         return {
           ...state,
+          error: [],
+          error2: []
+        }
+      }
+      case 'success': {
+        return {
+          ...state,
+          successMessage: true,
           error: []
+        }
+      }
+      case 'clearSuccessAlert' : {
+        return {
+          ...state,
+          successMessage: false,
+          passwordUpdateSuccessMsg: false,
         }
       }
       case 'error' : {
         return {
           ...state,
           error: action.payload
+        }
+      }
+      case 'passwordError' : {
+        return {
+          ...state,
+          error2: action.payload
+        }
+      }
+      case 'passwordSuccess' : {
+        return {
+          ...state,
+          passwordUpdateSuccessMsg: true,
+          error2: []
         }
       }
       default: 
