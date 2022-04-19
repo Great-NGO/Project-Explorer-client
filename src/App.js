@@ -15,6 +15,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import EditProject from './pages/EditProject';
 import ProtectedRoute from './services/ProtectedRoute';
 import EditProfile from './pages/EditProfile';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
         <Route path="/forgotPassword" element={ <ForgotPassword />} />
         {/* <Route path="/editProfile/:id" element={ getCurrentUser() ? <EditProfile /> : <Navigate to="/login" /> } /> */}
         <Route path="/editProfile/:id" element={ <ProtectedRoute Component={EditProfile} />} />
-        
+        <Route path="/resetPassword/:id" element={<ResetPassword />} />
         <Route path="*" element={ <E404 />} />
      </Routes>
     </Router>

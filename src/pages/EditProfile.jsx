@@ -3,7 +3,6 @@ import Layout from "./shared/Layout";
 import { Button, Container, Form, Navbar, Alert } from "react-bootstrap";
 import AuthService from "../services/auth";
 import { useParams } from "react-router-dom";
-// import { useNavigate, useParams } from "react-router-dom";
 //Import reducer function to be used my useReducer hook
 import { reducer } from "../reducers/editProfile";
 import axios from 'axios';
@@ -13,7 +12,6 @@ import useFetch from "../services/useFetch";
 
 const EditProfile = () => {
   //Invoking Params and Navigate method from react-router-dom
-
   const params = useParams();
 
   //Initial states (useReducer hook to handle Change and show initial values)
@@ -33,15 +31,14 @@ const EditProfile = () => {
     passwordUpdateSuccessMsg: false,
   }
 
-
  //We use custom hook - useFetch to populate data for programData and graduationYears from their respective APIs
  const programData = useFetch('/api/programs');
  const gradYearData = useFetch('/api/graduationYears');
 
   //Using the UseContext hook
-  const {firstname, setFirstName } = useContext(UserContext).value1;
-  const {setProfilePicture } = useContext(UserContext).value2;
-  console.log(firstname);
+const {firstname, setFirstName } = useContext(UserContext).value1;
+const {setProfilePicture } = useContext(UserContext).value2;
+console.log(firstname);
 
 //Invoking the useReducer hook and extracting input elements from our state
 const [state, dispatch] = useReducer(reducer, initialState);
@@ -54,12 +51,10 @@ useEffect(() => {
   console.log(`The User Id is ${userId}`);
   const user = getCurrentUser();
   console.log("The user is: ", user)
-
   //Run the dispatch function which loads our details
   dispatch({type: 'loadProfileDetails', data:user})
 
 }, [getCurrentUser, userId])
-
 
 
 const handleInputChange = (evt) => {
@@ -70,7 +65,6 @@ const handleInputChange = (evt) => {
     if(name === 'firstname') {
       setFirstName(value)
     }
-
     dispatch({ type: 'field', fieldName:name, payload: value})
 
 }
@@ -81,7 +75,6 @@ const handleInputChange = (evt) => {
 
     dispatch({type: 'profilePicture', fieldName:name, payload:files[0]})
   }
-
   console.log("Profile pic", profilePicture)
 
   //Handle Update Profile function
@@ -122,7 +115,6 @@ const handleInputChange = (evt) => {
     
   }
 
-
   const removeProfilePicture = async (evt) => {
     evt.preventDefault();
     console.log('Remove profPic was clicked');
@@ -142,6 +134,7 @@ const handleInputChange = (evt) => {
     }
 
   }
+
   //Handle Update Password function
   const handleUpdatePassword =async  (evt) => {
     evt.preventDefault();
@@ -195,7 +188,6 @@ const handleShow = (evt) => {
                       <div className="col-md-4">
                         Program
                         <p> <strong>{program}</strong></p>
-   
                       </div>
 
                       <div className="col-md-4">
@@ -245,7 +237,6 @@ const handleShow = (evt) => {
                           </Alert>
                           : null
                         }
-
  
                       <div className="row mx-5 my-3">
 
